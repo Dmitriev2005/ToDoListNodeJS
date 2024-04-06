@@ -1,0 +1,50 @@
+<%-include("../partials/head",{title:title})%>
+<%-include("../partials/header",{user:user})%>
+  <div class="container">
+    <div class="form__authorisation">
+        <div class="input__container">
+            <label for="login">Login</label>
+            <br>
+            <label for="password">Password</label>
+    
+        </div>
+        <div class="input__container">
+            <input name="login" type="text" v-model="user.login">
+            <br>
+            <input name="password" type="password" v-model="user.password">
+        </div>
+        
+    </div>
+    <input type="button" value="Authorisate" @click="send">
+
+  </div>
+  <script>
+    Vue.createApp({
+        data(){
+            return{
+                user:{
+                    login:"",
+                    password:""
+                }
+            }
+        },
+        methods:{
+            send(){
+                fetch('http://localhost:8000/login',{
+                    headers:{
+                        'Content-Type':'application/json'
+                    },
+                    method:'POST',
+                    body:JSON.stringify(this.user)
+                }).then(res=>{
+                    if(res.ok){
+                        //location.replace(document.URL)
+                        alert("You authorisation!")
+                        location.href="http://localhost:8000"
+                    }
+                })
+            }
+        }
+    }).mount('.container')
+  </script>
+<%-include("../partials/footer")%>

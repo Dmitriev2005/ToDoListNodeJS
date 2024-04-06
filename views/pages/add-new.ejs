@@ -1,0 +1,55 @@
+<%-include("../partials/head",{title:title})%>
+<%-include("../partials/header",{user:user})%>
+    <div id="wrapp">
+        <h2>Add new</h2>
+        <div id="appNewTask">
+            <div>
+                <h3>Title</h3>
+                <input type="text" v-model="title"> 
+            </div>
+            <div>
+                <h3>Describe</h3>
+                <input type="text" v-model="describe"> 
+            </div>
+            <div>
+                <h3>Data completion</h3>
+                <input type="date" v-model="dataCompletion"> 
+            </div>
+            <div>
+                <input type="button" value="Add" @click="handleAddNewTask">
+            </div>
+        </div>
+    </div>
+   <script>
+        Vue.createApp({
+            data(){
+                return{
+                    newTask:{
+                        title:"",
+                        describe:"",
+                        dataCompletion: "2015-05-09"
+                    }
+                }
+            },
+            methods:{
+                async handleAddNewTask(){
+                   
+                    const res = await fetch(
+                        "http://localhost:8000/add-new",{
+                           method:"POST",
+                           headers:{
+                            "Content-Type":"application/json"
+                            
+                           },
+                           body:JSON.stringify(this.newTask) 
+                        })
+                    if(res.ok){
+                        alert("Task added!")
+                        location.reload()
+                    }
+                        
+                }
+            }
+        }).mount("#appNewTask")
+   </script>
+<%-include("../partials/footer")%>

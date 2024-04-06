@@ -1,0 +1,50 @@
+<%-include("../partials/head",{title:title})%>
+<%-include("../partials/header",{user:user})%>
+
+    <div id="appIndex">
+      <%if(typeof user=="object"){%> 
+        <div id="addNewTask">
+          <h2>Add new task</h2>
+          <input type="button" value="New" @click="handleNew">
+        </div>
+      <%}%>
+      <task :tasks="task_list" :task-edit="handleEdit"></task>
+    </div>
+
+  <script>
+    Vue.createApp({
+      data(){
+        return{
+          task_list:[]
+        }
+      },
+      methods:{
+        async getServer(){
+          const res = await fetch("http://localhost:8000/get-tasks")
+          this.task_list = await res.json()
+        },
+        handleEdit(task){
+          console.log(task)
+        },
+        async handleNew(){
+          location.href = "http://localhost:8000/add-new"
+
+        }
+      },
+      mounted(){
+        this.getServer()
+      }
+    }).component("task",{
+      props:["tasks", "taskEdit"],
+      template:`
+      <div v-for="item in tasks">
+        <div style='border: 1px solid black;'>
+          <h6>{{item.data_add_task}}</h6>
+          <h2>{{item.title_task}}</h2>
+          <h4>{{item.describe_task}}</h4>
+          <div><input type='button' @click='taskEdit(item)' value='Edit'/></div>
+        </div>
+      </div>`
+    }).mount("#appIndex")
+  </script>
+<%-include("../partials/footer")%>

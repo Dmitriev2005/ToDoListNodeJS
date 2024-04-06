@@ -1,0 +1,25 @@
+<body>
+<header id="headerApp">
+  <h1>To do list</h1>
+  <nav>Home</nav>
+  <nav @click="authorisation">Authorisation</nav>
+  <nav>About</nav>
+  <div class="user">
+    <%if(typeof user!=="object"){%> 
+      <%=user%> 
+    <%}else{%> 
+      <%=user.login%>
+    <%}%>
+  </div>
+  
+</header>
+<script>
+  Vue.createApp({
+    methods:{
+      authorisation(){
+        //fetch('http://localhost:8000/login')
+        location.href = 'http://localhost:8000/login'
+      }
+    }
+  }).mount('#headerApp')
+</script>
