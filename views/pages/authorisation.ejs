@@ -2,20 +2,15 @@
 <%-include("../partials/header",{user:user})%>
   <div class="container">
     <div class="form__authorisation">
+        
         <div class="input__container">
-            <label for="login">Login</label>
-            <br>
-            <label for="password">Password</label>
-    
-        </div>
-        <div class="input__container">
+            <div class="label">Логин</div>
             <input name="login" type="text" v-model="user.login">
-            <br>
+            <div class="label">Пароль</div>
             <input name="password" type="password" v-model="user.password">
         </div>
-        
+        <div @click="send" class="btn">Авторизоваться</div>
     </div>
-    <input type="button" value="Authorisate" @click="send">
 
   </div>
   <script>
@@ -39,12 +34,16 @@
                 }).then(res=>{
                     if(res.ok){
                         //location.replace(document.URL)
-                        alert("You authorisation!")
+                        alert("Вы авторизированы!")
                         location.href="http://localhost:8000"
+                    }
+                    else{
+                        alert("Неверный логин или пароль!")
                     }
                 })
             }
         }
     }).mount('.container')
   </script>
-<%-include("../partials/footer")%>
+  </body>
+</html>

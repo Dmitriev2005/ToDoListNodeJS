@@ -4,8 +4,8 @@
     <div id="appIndex">
       <%if(typeof user=="object"){%> 
         <div id="addNewTask">
-          <h2>Add new task</h2>
-          <input type="button" value="New" @click="handleNew">
+          <h2>Добавить новую заметку</h2>
+          <input type="button" value="Новая заметка" @click="handleNew">
         </div>
       <%}%>
       <task :tasks="task_list" :task-edit="handleEdit"></task>
@@ -21,7 +21,13 @@
       methods:{
         async getServer(){
           const res = await fetch("http://localhost:8000/get-tasks")
-          this.task_list = await res.json()
+          const buffer = await res.json()
+          buffer.forEach(item=>{
+            item.data_add_task = item.data_add_task.match(/^\d{4}-\d{2}-\d{2}/)
+            item.data_completion_task = item.data_completion_task.match(/^\d{4}-\d{2}-\d{2}/)
+            this.task_list.push(item)
+            console.log(item)
+          })
         },
         handleEdit(task){
           console.log(task)
@@ -39,12 +45,14 @@
       template:`
       <div v-for="item in tasks">
         <div style='border: 1px solid black;'>
-          <h6>{{item.data_add_task}}</h6>
+          <h6>Дата добавления {{item.data_add_task[0]}}</h6>
+          <h6>Дата завершения {{item.data_completion_task[0]}}</h6>
           <h2>{{item.title_task}}</h2>
           <h4>{{item.describe_task}}</h4>
-          <div><input type='button' @click='taskEdit(item)' value='Edit'/></div>
+          <div><input type='button' @click='taskEdit(item)' value='Изменить'/></div>
         </div>
       </div>`
     }).mount("#appIndex")
   </script>
-<%-include("../partials/footer")%>
+</body>
+</html>

@@ -25,7 +25,7 @@ const shortCut = (req)=>{
   const buffer = verifyToken(req)
   let user
   if(buffer===403)
-    res.status(403).send("No valid token")
+    user = 403
   else if(!buffer)
     user = "No authorisation"
   else 
@@ -93,10 +93,16 @@ export const postAddNewTask = (req,res) =>{
       title_task:newTask.title,
       describe_task:newTask.describe,
       data_completion_task:newTask.dataCompletion,
-      data_add_task:new Date()
+      data_add_task:new Date(),
+      user_fk_id_task:user.id
+
     }).then(res.status(200))
     
   }else{
     res.status(403).send("Error!")
   }
+}
+export const getDeleteCookie = (req,res) =>{
+  res.status(200).clearCookie('authorisation_token')
+  res.send("Exit!")
 }

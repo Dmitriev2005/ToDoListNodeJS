@@ -4,16 +4,16 @@
         <h2>Add new</h2>
         <div id="appNewTask">
             <div>
-                <h3>Title</h3>
-                <input type="text" v-model="title"> 
+                <h3>Название</h3>
+                <input type="text" v-model="newTask.title"> 
             </div>
             <div>
-                <h3>Describe</h3>
-                <input type="text" v-model="describe"> 
+                <h3>Описание</h3>
+                <input type="text" v-model="newTask.describe"> 
             </div>
             <div>
-                <h3>Data completion</h3>
-                <input type="date" v-model="dataCompletion"> 
+                <h3>Дата завершения</h3>
+                <input type="date" v-model="newTask.dataCompletion"> 
             </div>
             <div>
                 <input type="button" value="Add" @click="handleAddNewTask">
@@ -33,7 +33,7 @@
             },
             methods:{
                 async handleAddNewTask(){
-                   
+                   console.log(this.newTask)
                     const res = await fetch(
                         "http://localhost:8000/add-new",{
                            method:"POST",
@@ -52,4 +52,5 @@
             }
         }).mount("#appNewTask")
    </script>
-<%-include("../partials/footer")%>
+</body>
+</html>

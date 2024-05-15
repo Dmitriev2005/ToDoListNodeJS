@@ -1,9 +1,14 @@
 <body>
 <header id="headerApp">
   <h1>To do list</h1>
-  <nav>Home</nav>
-  <nav @click="authorisation">Authorisation</nav>
-  <nav>About</nav>
+  <nav @click="home">Главная</nav>
+  <%if(typeof user!=="object"){%> 
+    <nav @click="authorisation">Авторизация</nav>
+  <%}else{%> 
+    <nav @click="exit">Выйти</nav>
+  <%}%>
+
+  <nav>О сайте</nav>
   <div class="user">
     <%if(typeof user!=="object"){%> 
       <%=user%> 
@@ -17,8 +22,15 @@
   Vue.createApp({
     methods:{
       authorisation(){
-        //fetch('http://localhost:8000/login')
         location.href = 'http://localhost:8000/login'
+      },
+      home(){
+        location.href = 'http://localhost:8000/'
+      },
+      async exit(){
+        const res = await fetch('http://localhost:8000/delete-cookie')
+        if(res.ok)
+          location.reload()
       }
     }
   }).mount('#headerApp')

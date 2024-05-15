@@ -49,17 +49,9 @@ const TaskTable = db.define("task",{
         type:DataTypes.DATE
     },
     user_fk_id_task :{
-        type:DataTypes.INTEGER,
-        references:{
-          model:'user',
-          key:'id_user'
-        }
+        type:DataTypes.INTEGER
+       
     }
 },{timestamps:false})
-TaskTable.associations = (model) =>{
-  TaskTable.belongsTo(model.User,{
-    foreignKey:'user_fk_id_task',
-    onDelete:'CASCADE'
-  })
-}
+
 export {UserTable,TaskTable}
