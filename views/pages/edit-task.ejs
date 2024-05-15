@@ -1,0 +1,64 @@
+<%-include("../partials/head",{title:title})%>
+<%-include("../partials/header",{user:user})%>
+    <div id="wrapp">
+        <h2>Add new</h2>
+        <div id="appNewTask">
+            <div>
+                <h3>Название</h3>
+                <input type="text" v-model="editTask.title"> 
+            </div>
+            <div>
+                <h3>Описание</h3>
+                <input type="text" v-model="editTask.describe"> 
+            </div>
+            <div>
+                <h3>Дата завершения</h3>
+                <input type="date" v-model="editTask.dataCompletion"> 
+            </div>
+            <div>
+                <input type="button" value="Изменить" @click="handleEditTask">
+            </div>
+        </div>
+    </div>
+   <script>
+    
+        Vue.createApp({
+            data(){
+                return{
+                    editTask:{
+                        title:"",
+                        describe:"",
+                        dataCompletion: "2015-05-09"
+                    }
+                }
+            },
+            methods:{
+                async handleEditTask(){
+                   console.log(this.newTask)
+                    const res = await fetch(
+                        "http://localhost:8000/add-new",{
+                           method:"POST",
+                           headers:{
+                            "Content-Type":"application/json"
+                            
+                           },
+                           body:JSON.stringify(this.newTask) 
+                        })
+                    if(res.ok){
+                        alert("Task added!")
+                        location.reload()
+                    }
+                        
+                }
+            },
+            mounted(){
+                const param = URLSearchParams(location.search)
+                // this.editTask.title = param.get("title")
+                // this.editTask.describe = param.get("describe")
+                // this.editTask.dataCompletion = param.get("data-completion")
+
+            }
+        }).mount("#appNewTask")
+   </script>
+</body>
+</html>

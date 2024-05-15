@@ -1,5 +1,5 @@
 import express from "express"
-import {getIndex, postAuthorisation, getAuthorisation, getTasks,getAddNewTask, postAddNewTask, getDeleteCookie} from "../controllers/controller.js"
+import {getIndex, postAuthorisation, getAuthorisation, getTasks,getAddNewTask, postAddNewTask, getDeleteCookie,postEditTasks,getEditTasks} from "../controllers/controller.js"
 const router = express.Router()
 
 router.get("/",getIndex)
@@ -10,4 +10,6 @@ router.get("/add-new",getAddNewTask)
 router.post("/add-new",postAddNewTask)
 
 router.get("/delete-cookie", getDeleteCookie)
+router.post("/post-edit-tasks", postEditTasks)
+router.get("/get-edit-tasks", getEditTasks)
 export const exportRouter = router

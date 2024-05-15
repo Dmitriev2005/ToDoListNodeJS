@@ -106,3 +106,22 @@ export const getDeleteCookie = (req,res) =>{
   res.status(200).clearCookie('authorisation_token')
   res.send("Exit!")
 }
+export const getEditTasks = (req,res) =>{
+  const sendToEdit = req.body
+  const user = shortCut(req)
+  if(typeof user === "object"){
+    res.status(200).render("./pages/edit-task",{title:"Authorisation", user, sendToEdit})
+  }
+  else{
+    res.status(403).send("Not authorisation")
+  }
+}
+export const postEditTasks = (req,res)=>{
+  const user = shortCut(req)
+  if(typeof user === "object"){
+    res.status(200).json(req.body)
+  }
+  else{
+    res.status(403).send("Not authorisation")
+  }
+}
