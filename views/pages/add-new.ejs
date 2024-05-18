@@ -1,7 +1,7 @@
 <%-include("../partials/head",{title:title})%>
 <%-include("../partials/header",{user:user})%>
     <div id="wrapp">
-        <h2>Add new</h2>
+        <h2>Добавить новую заметку</h2>
         <div id="appNewTask">
             <div>
                 <h3>Название</h3>
@@ -16,7 +16,7 @@
                 <input type="date" v-model="newTask.dataCompletion"> 
             </div>
             <div>
-                <input type="button" value="Add" @click="handleAddNewTask">
+                <input type="button" value="Добавить" @click="handleAddNewTask">
             </div>
         </div>
     </div>
