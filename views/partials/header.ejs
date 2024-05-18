@@ -4,6 +4,7 @@
   <nav @click="home">Главная</nav>
   <%if(typeof user!=="object"){%> 
     <nav @click="authorisation">Авторизация</nav>
+    <nav @click="registration">Регистрация</nav>
   <%}else{%> 
     <nav @click="exit">Выйти</nav>
   <%}%>
@@ -31,6 +32,10 @@
         const res = await fetch('http://localhost:8000/delete-cookie')
         if(res.ok)
           location.reload()
+      },
+      registration(){
+        location.href = 'http://localhost:8000/registration'
+        
       }
     }
   }).mount('#headerApp')

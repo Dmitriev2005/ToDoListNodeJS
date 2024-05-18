@@ -1,7 +1,8 @@
 import { json } from "sequelize"
 import {UserTable,TaskTable} from "../models/model.js"
 import jwt, { decode } from "jsonwebtoken"
-
+import nodemailer from "nodemailer"
+import {randomNumber} from "../helper/forServer.js"
 let secretWord = 'very_secret'
 
 const verifyToken = (req) =>{
@@ -56,7 +57,7 @@ export const postAuthorisation = async (req,res) =>{
       id:responseDB.dataValues.id_user,
       login:responseDB.dataValues.login
     }
-    const token = jwt.sign(userAuthourisation,secretWord,{expiresIn:"1h"})
+    const token = jwt.sign(userAuthourisation,secretWord)
     res.cookie('authorisation_token',token,{httpOnly:true})
     res.status(200).send("You authorisation!")
   } 
@@ -116,12 +117,51 @@ export const getEditTasks = (req,res) =>{
     res.status(403).send("Not authorisation")
   }
 }
-export const postEditTasks = (req,res)=>{
+export const postEditTasks = async(req,res)=>{
   const user = shortCut(req)
+  
   if(typeof user === "object"){
-    res.status(200).json(req.body)
+    const editTask = req.body
+    const searchElement = await TaskTable.findOne({where:{
+      id_task:editTask.id
+    }})
+    
+    searchElement.title_task = editTask.title
+    searchElement.describe_task = editTask.describe
+    searchElement.data_completion_task = editTask.dataCompletion
+    searchElement.save()
+
+    res.status(200).send("task edit!")
   }
   else{
     res.status(403).send("Not authorisation")
   }
+}
+export const getRegistration = (req,res)=>{
+  const user = shortCut(req)
+  res.status(200).render("./pages/registration",{title:"Регистрация", user})
+}
+export const postCheckEmail = (req,res)=>{
+  const user = req.body
+  const transporter = nodemailer.createTransport({
+    host: 'mail.malojhomelab.ru',
+    port: 587,
+    auth:{
+      user:'artyom@malojhomelab.ru',
+      pass:`yfWThPtr"jK;G2"`
+    }
+  })
+  const mailOptions = {
+    from:'artyom@malojhomelab.ru',
+    to:user.email,
+    subject:'Test',
+    text:'texdfyugduy'
+  }
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      return console.log(error);
+    }
+    console.log('Email sent: ' + info.response);
+  })
+  res.status(200).send("email")
 }

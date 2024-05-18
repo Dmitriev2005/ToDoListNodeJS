@@ -1,7 +1,7 @@
 import { Sequelize, DataTypes } from "sequelize"
 
 
-const db = new Sequelize("to_do_list","root","",{
+const db = new Sequelize("to_do_list","user","password",{
   dialect:"mysql",
   host:"localhost",
   define:{
