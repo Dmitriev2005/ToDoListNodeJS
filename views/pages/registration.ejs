@@ -5,11 +5,15 @@
         
         <div class="input__container">
             <div class="label">Почта</div>
-            <input name="email" type="text" v-model="user.email">
+            <input name="email" type="text" v-model="user.login">
             <div class="label">Пароль</div>
             <input name="password" type="password" v-model="user.password">
+            <div class="label" v-if="isClickAut">Код подтверждения</div>
+            <input name="password" v-if="isClickAut" type="text"  v-model="user.checkCode">
         </div>
-        <div @click="checkEmail" class="btn">Авторизоваться</div>
+        <div @click="checkEmail" v-if="!isClickAut"  class="btn">Отправить код подтверждения</div>
+        <div v-if="isClickAut" @click="checkCode" class="btn">Подтвердить</div>
+        <div v-if="isClickAut" class="label">Код будет не действителен через: {{timer}}</div>
     </div>
 
   </div>
@@ -18,30 +22,17 @@
         data(){
             return{
                 user:{
-                    email:"",
-                    password:""
-                }
+                    login:"",
+                    password:"",
+                    
+                    checkCode:""
+                },
+                isClickAut:false,
+                timer:100
             }
         },
         methods:{
-            send(){
-                fetch('http://localhost:8000/login',{
-                    headers:{
-                        'Content-Type':'application/json'
-                    },
-                    method:'POST',
-                    body:JSON.stringify(this.user)
-                }).then(res=>{
-                    if(res.ok){
-                        //location.replace(document.URL)
-                        alert("Вы авторизированы!")
-                        location.href="http://localhost:8000"
-                    }
-                    else{
-                        alert("Неверный логин или пароль!")
-                    }
-                })
-            },
+            
             async checkEmail(){
                 const res = await fetch(
                     "http://localhost:8000/post-email",
@@ -53,7 +44,39 @@
                         body:JSON.stringify(this.user)
                     }
                 )
+                if(res.ok){
+                    this.isClickAut = true
+                    this.startTimer()
+                }
+            },
+            async checkCode(){
+                const res = await fetch(
+                    "http://localhost:8000/post-check-code",
+                    {
+                        headers:{
+                            "Content-Type":"application/json"
+                        },
+                        method:"POST",
+                        body:JSON.stringify(this.user)
+                    }
+                )
+                if(res.ok){
+                    alert("Вы зарегистрировались!")
+                    location.href = "http://localhost:8000/login"
+                }
+            },
+            startTimer(){
+                this.interval = setInterval(()=>{
+                    if(this.timer===0)
+                        location.reload()
+                    else
+                        this.timer--
+                },1000)
             }
+        },
+        
+        beforeUnmount(){
+            clearInterval(this.interval)
         }
     }).mount('.container')
   </script>

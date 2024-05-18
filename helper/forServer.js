@@ -8,6 +8,6 @@ const randomNumber = ()=>{
         return (strRnd+rnd)
     }
         
-    return rnd
+    return String(rnd)
 }
 export {randomNumber}

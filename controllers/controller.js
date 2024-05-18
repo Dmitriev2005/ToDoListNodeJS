@@ -3,8 +3,9 @@ import {UserTable,TaskTable} from "../models/model.js"
 import jwt, { decode } from "jsonwebtoken"
 import nodemailer from "nodemailer"
 import {randomNumber} from "../helper/forServer.js"
+import NodeCache from "node-cache"
 let secretWord = 'very_secret'
-
+let cache = new NodeCache()
 const verifyToken = (req) =>{
   let returnVerf = 403
   if("authorisation_token" in req.cookies){
@@ -143,6 +144,7 @@ export const getRegistration = (req,res)=>{
 }
 export const postCheckEmail = (req,res)=>{
   const user = req.body
+  const rnd = randomNumber()
   const transporter = nodemailer.createTransport({
     host: 'mail.malojhomelab.ru',
     port: 587,
@@ -153,9 +155,10 @@ export const postCheckEmail = (req,res)=>{
   })
   const mailOptions = {
     from:'artyom@malojhomelab.ru',
-    to:user.email,
-    subject:'Test',
-    text:'texdfyugduy'
+    to:user.login,
+    subject:'Подтверждение почты',
+    text:'Код для подтверждения почты',
+    html:`<b>${rnd}</b>`
   }
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
@@ -163,5 +166,21 @@ export const postCheckEmail = (req,res)=>{
     }
     console.log('Email sent: ' + info.response);
   })
+  cache.set("checkCode",rnd,100)
   res.status(200).send("email")
+}
+export const postCheckCode = async(req,res)=>{
+  const user = req.body
+  if(user.checkCode===cache.get("checkCode")){
+    const responseDB = await UserTable.create({
+      login:user.login,
+      password:user.password
+    })
+    if(!responseDB.isNewRecord)
+      res.status(200).send("Пользователь добавлен!")
+    else
+      res.status(500).send("Пользователь не добавлен!")
+  }else{
+    res.status(400).send("Неправильный код!")
+  }
 }

@@ -1,7 +1,7 @@
 import { Sequelize, DataTypes } from "sequelize"
 
 
-const db = new Sequelize("to_do_list","user","password",{
+const db = new Sequelize("to_do_list","root","",{
   dialect:"mysql",
   host:"localhost",
   define:{
@@ -14,19 +14,13 @@ const UserTable = db.define("user",{
     primaryKey:true,
     autoIncrement:true
   },
-  lastname_user:{
-    type:DataTypes.STRING
-  },
-  name_user:{
-    type:DataTypes.STRING
-  },
-  surname_user:{
-    type:DataTypes.STRING
-  },
   login:{
     type:DataTypes.STRING
   },
   password:{
+    type:DataTypes.STRING
+  },
+  check_code:{
     type:DataTypes.STRING
   }
 }, {timestamps:false})
