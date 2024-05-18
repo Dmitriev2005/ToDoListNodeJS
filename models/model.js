@@ -19,9 +19,6 @@ const UserTable = db.define("user",{
   },
   password:{
     type:DataTypes.STRING
-  },
-  check_code:{
-    type:DataTypes.STRING
   }
 }, {timestamps:false})
 const TaskTable = db.define("task",{

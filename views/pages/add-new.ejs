@@ -33,7 +33,6 @@
             },
             methods:{
                 async handleAddNewTask(){
-                   console.log(this.newTask)
                     const res = await fetch(
                         "http://localhost:8000/add-new",{
                            method:"POST",
@@ -45,7 +44,9 @@
                         })
                     if(res.ok){
                         alert("Задача добавлена!")
-                        location.reload()
+                        location.href = "http://localhost:8000"
+                        console.log(this.newTask)
+
                     }
                    
                         

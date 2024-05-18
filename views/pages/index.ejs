@@ -8,7 +8,7 @@
           <input type="button" value="Новая заметка" @click="handleNew">
         </div>
       <%}%>
-      <task :tasks="task_list" :task-edit="handleEdit"></task>
+      <task :tasks="task_list" :task-edit="handleEdit" :task-delete="handleDelete"></task>
     </div>
 
   <script>
@@ -48,6 +48,22 @@
               expires = "; expires=" + date.toUTCString();
           }
           document.cookie = name + "=" + value + expires + "; path=/";
+        },
+        async handleDelete(item){
+          const res = await fetch(
+            "http://localhost:8000/post-delete-task",
+            {
+              headers:{
+                "Content-Type":"application/json"
+              },
+              body:JSON.stringify(item),
+              method:"POST"
+            }
+          )
+          if(res.ok){
+            alert("Заметка удалена!")
+            location.reload()
+          }
         }
         
       },
@@ -55,7 +71,7 @@
         this.getServer()
       }
     }).component("task",{
-      props:["tasks", "taskEdit"],
+      props:["tasks", "taskEdit","taskDelete"],
       template:`
       <div v-for="item in tasks">
         <div style='border: 1px solid black;'>
@@ -64,6 +80,7 @@
           <h2>{{item.title_task}}</h2>
           <h4>{{item.describe_task}}</h4>
           <div><input type='button' @click='taskEdit(item)' value='Изменить'/></div>
+          <div><input type='button' @click='taskDelete(item)' value='Удалить' style='background-color:red;'/></div>
         </div>
       </div>`
     }).mount("#appIndex")

@@ -87,18 +87,20 @@ export const getAddNewTask = (req,res)=>{
     res.status(403).send("Not authorisation")
   }
 }
-export const postAddNewTask = (req,res) =>{
+export const postAddNewTask = async (req,res) =>{
   const user = shortCut(req)
   const newTask = req.body
   if(typeof user === "object"){
-    TaskTable.create({
+    const resultBD = await TaskTable.create({
       title_task:newTask.title,
       describe_task:newTask.describe,
       data_completion_task:newTask.dataCompletion,
       data_add_task:new Date(),
       user_fk_id_task:user.id
 
-    }).then(res.status(200))
+    })
+    if(!resultBD.isNewRecord)
+      res.status(200).send("Заметка добавлена!")
     
   }else{
     res.status(403).send("Error!")
@@ -183,4 +185,18 @@ export const postCheckCode = async(req,res)=>{
   }else{
     res.status(400).send("Неправильный код!")
   }
+}
+export const postDeleteTask = async(req,res)=>{
+  const task = req.body
+  const responseDB = await TaskTable.destroy(
+    {
+      where:{
+        id_task:task.id_task
+      }
+    }
+  )
+  if(responseDB>0)
+    res.status(200).send("Заметка удалена!")
+  else 
+    res.status(500).send("Сервер не смог удалить запись!")
 }
